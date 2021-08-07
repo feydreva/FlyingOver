@@ -1,0 +1,22 @@
+Hello,
+
+== Goal of this project ==
+I live "near" an airport, on the descent path to landing
+Goal is to display info of incoming aircraft, specially where it is comming from
+
+== Resources ==
+API for airport conversion :https://api.joshdouch.me/
+
+Route info are not up to date, so I get them from http://www.virtualradarserver.co.uk
+
+For this project, I used code and info from :
+flyover from jeremybmerrill: https://github.com/jeremybmerrill/flyover
+flightpi from mattdyy : https://github.com/mattdy/flightpi
+flightpi from Galaxy : https://github.com/GalaxyTheoryz/flightpi
+
+Other project used for this :
+dump1090-fa
+
+
+== How to ==
+See instructions

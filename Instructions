@@ -1,0 +1,62 @@
+Install Raspian :
+=================
+Using Raspberry Pi Imager :
+https://www.raspberrypi.org/software/
+
+Activate Wireless :
+====================
+https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
+
+Add wpa_supplicant.conf file in boot partition with :
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=<Insert 2 letter ISO 3166-1 country code here>
+
+network={
+        scan_ssid=1
+        ssid="<Name of your wireless LAN>"
+        psk="<Password for your wireless LAN>"
+        proto=RSN
+        key_mgmt=WPA-PSK
+        pairwise=CCMP
+        auth_alg=OPEN
+}
+
+Activate ssh :
+==============
+https://www.raspberrypi.org/documentation/remote-access/ssh/README.md
+
+Enable SSH on a headless Raspberry Pi (add file to SD card on another machine)
+
+For headless setup, SSH can be enabled by placing a file named ssh, without any extension, onto the boot partition of the SD card from another computer. When the Pi boots, it looks for the ssh file. If it is found, SSH is enabled and the file is deleted. The content of the file does not matter; it could contain text, or nothing at all.
+
+If you have loaded Raspberry Pi OS onto a blank SD card, you will have two partitions. The first one, which is the smaller one, is the boot partition. Place the file into this one.
+
+
+Set up you pi as you want
+=========================
+for me, add user, share ssh key, sudoers group, raspi-config, update etcetcetc
+
+
+dump 1090
+==========
+Lastest dump1090 is maintain by piaware
+
+Install PIAware repository package :
+------------------------------------
+wget https://fr.flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.0_all.deb
+sudo dpkg -i piaware-repository_5.0_all.deb
+
+To install piaware : https://fr.flightaware.com/adsb/piaware/install
+------------------
+sudo apt-get update
+sudo apt-get install piaware
+
+
+To install dump1090 :
+---------------------
+sudo apt-get install dump1090-fa
+
+
+

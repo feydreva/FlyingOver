@@ -1,2 +1,6 @@
 # Project exclude paths
 /venv/
+FlightNumbers.csv
+FlightNumbers.nobom.csv
+flightnumbers.sqlite3
+StandingData.sqb
