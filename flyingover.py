@@ -5,7 +5,7 @@ import re
 
 
 
-max_alt = 50000  #altitude max de recherche d'avion
+max_alt = 70000  #altitude max de recherche d'avion
 
 
 #cette function cherche l'avion le plus pret de soit, parmis les avion captés
@@ -35,11 +35,31 @@ def get_the_nearest_airplane():
 #cette function nous donne la routre a partir d'un call sign de vol
 def get_route(flight_number):
     try:
+        # Si on utilise les donnée / API du site joshdouch.me
+        # cette function nous donne la routre a partir d'un call sign de vol
         with urllib.request.urlopen("https://api.joshdouch.me/callsign-route.php?callsign="+flight_number) as url:
             route = url.read().decode()
+            print(route)
             return route.split("-")
     except:
-        return
+        try:
+            a
+            # Si on utilise les données du site virtualradarserver.co.uk
+            # regex pour séparer la companie "airline code" et le niumero de vol "flight number"
+            flight_number_re = re.compile( "^([A-Z]+)?(\d+)$" )
+            airline, number = flight_number_re.match( flight_number ).groups()
+            con = sqlite3.connect( 'flightnumbers.sqlite3' )
+            cur = con.cursor()
+            flight_infos = list(cur.execute( '''SELECT * FROM flightnumbers where AirlineCode = ? and FlightNumber = ?''', (airline, number) ) )
+            con.close()
+            flight_infos = flight_infos[0]
+            flight_infos = flight_infos[2:]
+            flight_infos = list( flight_infos )
+            for c in flight_infos:
+                split_lines = c.split( "-" )
+            return [split_lines[0], split_lines[1]]
+        except:
+            return
 
 
 
@@ -52,38 +72,25 @@ print("Sa route est : ",get_route(get_the_nearest_airplane()))
 print("=====2")
 
 print("la route du vol SVA022 est : ",get_route("SVA022"))
+print("=====2")
+print("=====3")
+flight_number = "SVA1022"
+print(flight_number)
 
-
-#Si l api de josh douch.me ne fonctionne pas utilisé ceci.
-#=============================================================
 # Si on utilise les données du site virtualradarserver.co.uk
-#regex pour séparer la companie "airline code" et le niumero de vol "flight number"
-#flight_number_re = re.compile("^([A-Z]+)?(\d+)$")
+# regex pour séparer la companie "airline code" et le niumero de vol "flight number"
 
-#on obtient airline et numero de vol
-#"airline, number = flight_number_re.match(flight_number).groups()
-#airline, number = "VOE", "28NJ"
+flight_number_re = re.compile( "^([A-Z]+)?(\d+)$")
+airline, number = flight_number_re.match( flight_number ).groups()
+con = sqlite3.connect('flightnumbers.sqlite3')
+cur = con.cursor()
+flight_infos = list(cur.execute('''SELECT * FROM flightnumbers where AirlineCode = ? and FlightNumber = ?''', (airline, number)))
+con.close()
+flight_infos = flight_infos[0]
+flight_infos=flight_infos[2:]
+flight_infos=list(flight_infos)
+for c in flight_infos:
+    split_lines = c.split("-")
+route = [split_lines[0],split_lines[1]]
 
-#airline = "VOE"
-#number = "2KM"
-#print(airline, number)
-
-# data is FlightNumbers.csv from http://www.virtualradarserver.co.uk/FlightRoutes.aspx
-# script assumes that the datafile is in the same directory as this script
-#on se connect a la db "flightnumbers.sqlite3" générée par le script "ensure_flightnumbers_csv_exist.sh"
-#con = sqlite3.connect('flightnumbers.sqlite3')
-#cur = con.cursor()
-#flight_infos = list(cur.execute('''SELECT * FROM flightnumbers where AirlineCode = ? and FlightNumber = ?''', (airline, number)))
-#con.close()
-
-#print(flight_infos)
-
-#if len(flight_infos) > 1:
-#    print("WARN: %s matches for %s: %s" % (len(flight_infos), flight_number, '|'.join(flight_infos) ), file=sys.stderr)
-#if len(flight_infos) < 1:
-#    print("WARN: zero matches for %s" % flight_number, file=sys.stderr)
-#if not flight_rows:
-#    print("RAS")
-
-#route = flight_rows[0][-1]
-
+print(route)
